@@ -1,9 +1,11 @@
 package Kwiki::Simple::Server::HTTP;
 use Kwiki::Plugin -Base;
+use mixin 'Kwiki::Installer';
 use HTTP::Server::Simple::Kwiki;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 const class_id => 'simple_server_http';
+const config_file => 'config/simple_server_http.yaml';
 
 sub register {
     my $register = shift;
@@ -12,12 +14,12 @@ sub register {
 }
 
 sub handle_start {
-    my $dir = $ARGV[0] || Cwd::cwd;
-    my $server = HTTP::Server::Simple::Kwiki->new();
+    my $port = shift || $self->hub->config->simple_server_http_port;
+    my $server = HTTP::Server::Simple::Kwiki->new($port);
     $server->run();
 }
 
-__END__
+__DATA__
 
 =head1 NAME
 
@@ -29,11 +31,30 @@ __END__
   kwiki -start
   HTTP::Server::Simple: You can connect to your server at http://localhost:8080
 
+Or starts it on different port:
+
+  kwiki -start 1234
+  HTTP::Server::Simple: You can connect to your server at http://localhost:1234
+
 =head1 DESCRIPTION
 
 This Kwiki plugin let you run a standalone http server for your Kwiki
 under current working directory. It is helpful for debugging purpose
-or just startup a wiki site quickly.
+or just startup a wiki site quickly. After installed, just run
+
+  kwiki -start
+
+And a http server (based on L<HTTP::Server::Simple::Kwiki> would be started.
+If you wish to run it on different port number, pass it as a command line
+argument:
+
+  kwiki -start 1234
+
+or edit config.yaml, change the value of C<simple_server_http_port> like this:
+
+  simple_server_http_port: 1234
+
+Command line option has higher precedence then configuration.
 
 =head1 SEE ALSO
 
@@ -50,3 +71,5 @@ See <http://www.perl.com/perl/misc/Artistic.html>
 
 =cut
 
+__config/simple_server_http.yaml__
+simple_server_http_port: 8080
