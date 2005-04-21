@@ -2,10 +2,10 @@ package Kwiki::Simple::Server::HTTP;
 use Kwiki::Plugin -Base;
 use mixin 'Kwiki::Installer';
 use HTTP::Server::Simple::Kwiki;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 const class_id => 'simple_server_http';
-const config_file => 'config/simple_server_http.yaml';
+const config_file => 'simple_server_http.yaml';
 
 sub register {
     my $register = shift;
